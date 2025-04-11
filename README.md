@@ -2,6 +2,11 @@
 
 This Ansible project automates the deployment of a WordPress website on a Debian-based system using Docker for the database. It sets up a complete LAMP stack (Linux, Apache, MySQL/MariaDB, PHP) with WordPress.
 
+## Project demo
+
+The project is accessible at the the url : https://checkpoint.faurealexis.dynv6.net	
+It's deployed on a proxmox node within a lxc container (debian)
+
 ## Project Overview
 
 The automation includes:
