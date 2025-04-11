@@ -1,0 +1,52 @@
+---
+# Ensure Docker is installed
+- name: Ensure Docker is installed
+  include_role:
+    name: prepare_docker
+
+# Create Docker network for WordPress
+- name: Create Docker network for WordPress
+  docker_network:
+    name: "{{ mariadb_network_name }}"
+    state: present
+
+# Create directory for Docker Compose files
+- name: Create Docker Compose directory
+  file:
+    path: "{{ docker_compose_dir }}"
+    state: directory
+    mode: '0755'
+
+# Create directory for MariaDB data
+- name: Create MariaDB data directory
+  file:
+    path: "{{ mariadb_data_dir }}"
+    state: directory
+    mode: '0755'
+
+# Create Docker Compose file for MariaDB
+- name: Create Docker Compose file for MariaDB
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ docker_compose_dir }}/docker-compose.yml"
+    mode: '0644'
+
+# Start MariaDB container using Docker Compose
+- name: Start MariaDB container
+  command: docker-compose up -d
+  args:
+    chdir: "{{ docker_compose_dir }}"
+
+# Wait for MariaDB to be ready
+- name: Wait for MariaDB to be ready
+  wait_for:
+    host: 127.0.0.1
+    port: "{{ mariadb_host_port }}"
+    delay: 5
+    timeout: 60
+
+# Install MySQL Python dependency for Ansible MySQL modules
+- name: Install Python MySQL client
+  apt:
+    name: python3-pymysql
+    state: present

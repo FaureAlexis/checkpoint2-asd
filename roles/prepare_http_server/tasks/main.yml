@@ -1,0 +1,46 @@
+---
+# Install Apache2 packages
+- name: Install Apache2 packages
+  apt:
+    name: "{{ apache_packages }}"
+    state: present
+    update_cache: yes
+
+# Enable Apache2 modules
+- name: Enable Apache2 modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ apache_modules }}"
+  notify: Restart Apache2
+
+# Ensure Apache2 service is running
+- name: Ensure Apache2 is running
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+
+# Create a basic virtual host for WordPress
+- name: Configure Apache2 virtual host for WordPress
+  template:
+    src: vhost.conf.j2
+    dest: /etc/apache2/sites-available/wordpress.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Apache2
+
+# Enable WordPress virtual host
+- name: Enable WordPress virtual host
+  command: a2ensite wordpress.conf
+  args:
+    creates: /etc/apache2/sites-enabled/wordpress.conf
+  notify: Restart Apache2
+
+# Disable default Apache2 site
+- name: Disable default Apache2 site
+  command: a2dissite 000-default.conf
+  args:
+    removes: /etc/apache2/sites-enabled/000-default.conf
+  notify: Restart Apache2

@@ -1,0 +1,15 @@
+---
+all:
+  children:
+    webservers:
+      hosts:
+        wordpress:
+          ansible_host: your.server.ip.address  # IPv4 or IPv6 address
+          ansible_connection: ssh
+          ansible_user: your_ssh_user  # SSH username
+          ansible_ssh_private_key_file: /path/to/your/private/key  # Path to SSH private key
+          ansible_become: yes  # Use sudo for privilege escalation
+          # ansible_become_password: your_sudo_password  # Recommended to use vault instead
+          # ansible_port: 22  # Uncomment to specify non-standard SSH port
+      vars:
+        ansible_python_interpreter: /usr/bin/python3 

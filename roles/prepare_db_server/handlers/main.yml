@@ -1,0 +1,7 @@
+---
+# Handlers for MariaDB in Docker
+
+- name: Restart MariaDB container
+  command: docker-compose restart mariadb
+  args:
+    chdir: "{{ docker_compose_dir }}"

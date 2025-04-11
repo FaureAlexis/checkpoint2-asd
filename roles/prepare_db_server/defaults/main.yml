@@ -1,0 +1,14 @@
+---
+# Default variables for MariaDB in Docker
+mariadb_version: "11.2.2"
+mariadb_container_name: "wordpress_mariadb"
+mariadb_root_password: "root_password_change_me"
+mariadb_database: "wordpress"
+mariadb_user: "wordpress"
+mariadb_password: "wordpress_password_change_me"
+mariadb_host_port: "3306"
+mariadb_data_dir: "/var/docker/mariadb"
+mariadb_network_name: "wordpress_network"
+
+# Docker Compose configuration
+docker_compose_dir: "/opt/wordpress-docker"

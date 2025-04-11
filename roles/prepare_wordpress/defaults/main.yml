@@ -1,0 +1,41 @@
+---
+# MySQL settings
+db_name: wordpress_db
+db_user: wordpress_user
+db_password: wordpress_password
+db_root_password: db_root_password
+db_host: localhost
+
+# Security keys
+auth_key: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+secure_auth_key: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+logged_in_key: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+nonce_key: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+auth_salt: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+secure_auth_salt: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+logged_in_salt: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+nonce_salt: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits,~!@#$%^&*_-+=`|(){}[]:;<>,.?/') }}"
+
+# Default variables for WordPress installation
+wordpress_version: "6.4.3"
+wordpress_locale: "fr_FR"
+wordpress_package: "wordpress-{{ wordpress_version }}-{{ wordpress_locale }}.tar.gz"
+wordpress_download_url: "https://fr.wordpress.org/wordpress-{{ wordpress_version }}-{{ wordpress_locale }}.tar.gz"
+wordpress_sha256sum: ""
+
+# WordPress installation directory
+wordpress_install_dir: "/var/www/html"
+wordpress_owner: "www-data"
+wordpress_group: "www-data"
+
+# WordPress database settings
+wordpress_db_name: "{{ mariadb_database | default('wordpress') }}"
+wordpress_db_user: "{{ mariadb_user | default('wordpress') }}"
+wordpress_db_password: "{{ mariadb_password | default('wordpress_password_change_me') }}"
+wordpress_db_host: "{{ mariadb_container_name | default('localhost') }}"
+
+# WordPress site settings
+wordpress_site_title: "WordPress Site"
+wordpress_admin_user: "admin"
+wordpress_admin_password: "admin_password_change_me"
+wordpress_admin_email: "admin@example.com"

@@ -1,0 +1,73 @@
+---
+# Ensure Apache and PHP are installed
+- name: Ensure Apache is installed
+  include_role:
+    name: prepare_http_server
+
+- name: Ensure PHP is installed
+  include_role:
+    name: prepare_php
+
+# Create WordPress installation directory
+- name: Create WordPress installation directory
+  file:
+    path: "{{ wordpress_install_dir }}"
+    state: directory
+    owner: "{{ wordpress_owner }}"
+    group: "{{ wordpress_group }}"
+    mode: '0755'
+
+# Check if WordPress is already installed
+- name: Check if WordPress is already installed
+  stat:
+    path: "{{ wordpress_install_dir }}/wp-config.php"
+  register: wp_config
+
+# Copy WordPress tarball from files directory
+- name: Copy WordPress package from files directory
+  copy:
+    src: "{{ wordpress_package }}"
+    dest: "/tmp/{{ wordpress_package }}"
+  when: not wp_config.stat.exists
+
+# Extract WordPress archive
+- name: Extract WordPress archive
+  unarchive:
+    src: "/tmp/{{ wordpress_package }}"
+    dest: "/tmp"
+    remote_src: yes
+  when: not wp_config.stat.exists
+
+# Copy WordPress files to installation directory
+- name: Copy WordPress files to installation directory
+  shell: "cp -a /tmp/wordpress/. {{ wordpress_install_dir }}"
+  when: not wp_config.stat.exists
+
+# Create wp-config.php from template
+- name: Create wp-config.php from template
+  template:
+    src: wp-config.php.j2
+    dest: "{{ wordpress_install_dir }}/wp-config.php"
+    owner: "{{ wordpress_owner }}"
+    group: "{{ wordpress_group }}"
+    mode: '0644'
+  when: not wp_config.stat.exists
+
+# Set correct ownership of WordPress files
+- name: Set correct ownership of WordPress files
+  file:
+    path: "{{ wordpress_install_dir }}"
+    owner: "{{ wordpress_owner }}"
+    group: "{{ wordpress_group }}"
+    state: directory
+    recurse: yes
+
+# Ensure WordPress directories have correct permissions
+- name: Ensure WordPress directories have correct permissions
+  command: find {{ wordpress_install_dir }} -type d -exec chmod 755 {} \;
+  changed_when: false
+
+# Ensure WordPress files have correct permissions
+- name: Ensure WordPress files have correct permissions
+  command: find {{ wordpress_install_dir }} -type f -exec chmod 644 {} \;
+  changed_when: false

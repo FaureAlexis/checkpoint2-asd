@@ -1,0 +1,50 @@
+---
+# Add PHP repository
+- name: Add Sury PHP repository key
+  apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    state: present
+
+- name: Add Sury PHP repository
+  apt_repository:
+    repo: "deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
+
+# Install PHP packages
+- name: Install PHP packages
+  apt:
+    name: "{{ php_packages }}"
+    state: present
+    update_cache: yes
+
+# Configure PHP settings for WordPress
+- name: Configure PHP for WordPress (php.ini)
+  lineinfile:
+    path: "/etc/php/{{ php_version }}/fpm/php.ini"
+    regexp: "^{{ item.key }} ="
+    line: "{{ item.key }} = {{ item.value }}"
+  with_items:
+    - { key: "memory_limit", value: "{{ php_memory_limit }}" }
+    - { key: "max_execution_time", value: "{{ php_max_execution_time }}" }
+    - { key: "upload_max_filesize", value: "{{ php_upload_max_filesize }}" }
+    - { key: "post_max_size", value: "{{ php_post_max_size }}" }
+    - { key: "max_input_vars", value: "{{ php_max_input_vars }}" }
+  notify: Restart PHP-FPM
+
+# Enable PHP-FPM
+- name: Ensure PHP-FPM is running
+  service:
+    name: "{{ php_fpm_service }}"
+    state: started
+    enabled: yes
+
+# Enable Apache PHP modules
+- name: Enable Apache PHP modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - proxy
+    - proxy_fcgi
+  notify: Restart Apache2

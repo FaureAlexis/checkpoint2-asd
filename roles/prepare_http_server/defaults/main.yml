@@ -1,0 +1,13 @@
+---
+# Default variables for Apache2 HTTP server
+apache_packages:
+  - apache2
+
+apache_modules:
+  - rewrite
+  - http2
+
+apache_server_name: "{{ ansible_fqdn }}"
+apache_document_root: /var/www/html
+apache_user: www-data
+apache_group: www-data

@@ -1,0 +1,12 @@
+---
+# Handlers for PHP role
+
+- name: Restart PHP-FPM
+  service:
+    name: "{{ php_fpm_service }}"
+    state: restarted
+
+- name: Restart Apache2
+  service:
+    name: apache2
+    state: restarted

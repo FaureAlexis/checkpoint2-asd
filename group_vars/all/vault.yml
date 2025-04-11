@@ -1,0 +1,13 @@
+---
+# This file should be encrypted using ansible-vault
+# Use: ansible-vault encrypt group_vars/all/vault.yml
+
+# Sudo password for privilege escalation
+ansible_become_password: SomeSecurePass123!
+
+# Database credentials
+mariadb_root_password: change_me_root_password
+mariadb_password: change_me_wordpress_db_password
+
+# WordPress admin credentials
+wordpress_admin_password: change_me_admin_password 

@@ -1,0 +1,29 @@
+---
+# Default variables for PHP installation
+php_version: "8.2"
+php_packages:
+  - "php{{ php_version }}"
+  - "php{{ php_version }}-bcmath"
+  - "php{{ php_version }}-bz2"
+  - "php{{ php_version }}-intl"
+  - "php{{ php_version }}-gd"
+  - "php{{ php_version }}-mbstring"
+  - "php{{ php_version }}-mysql"
+  - "php{{ php_version }}-zip"
+  - "php{{ php_version }}-fpm"
+  - "php{{ php_version }}-curl"
+  - "php{{ php_version }}-xml"
+  - "php{{ php_version }}-imagick"
+  - "php{{ php_version }}-soap"
+
+# PHP-FPM configuration
+php_fpm_service: "php{{ php_version }}-fpm"
+php_fpm_pool_conf: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+php_fpm_socket: "/run/php/php{{ php_version }}-fpm.sock"
+
+# PHP configuration values
+php_memory_limit: "256M"
+php_max_execution_time: "300"
+php_upload_max_filesize: "64M"
+php_post_max_size: "64M"
+php_max_input_vars: "3000"
